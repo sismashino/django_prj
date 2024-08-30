@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat App</title>
+</head>
+<body>
+    <div id="chat-messages">
+        {% if messages %}
+            {% for message in messages %}
+            <div>{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="message"></textarea>
+        <button type="submit">Send</button>
+    </form>
+</body>
+</html>
