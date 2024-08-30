@@ -13,3 +13,9 @@ pip install -r requirements.txt
 ```
 python manage.py runserver
 ```
+
+参考
+
+https://ai.google.dev/api?hl=ja&lang=python
+
+https://aistudio.google.com/
