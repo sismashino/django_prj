@@ -1,22 +1,27 @@
 # chatapp/views.py
 from django.shortcuts import render
-import google.cloud
 import google.generativeai as genai
-import os
-from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+import vertexai
+from google.oauth2 import service_account
+from vertexai.generative_models import GenerativeModel
 
 # 初期化: 会話履歴をリストで管理
 conversation_history = []
 
 def generate_response(prompt):
     global conversation_history
-        
-    genai.configure(api_key=os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
+    
+    # サービスアカウントキーのパス
+    credentials_path = 'gen-lang-client-0746535071-b4820369d744.json'
 
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # サービスアカウントキーを用いて認証情報オブジェクトを作成
+    credentials = service_account.Credentials.from_service_account_file(credentials_path)
+
+    # Vertex AI APIの初期化
+    vertexai.init(project='gen-lang-client-0746535071', location='asia-northeast1', credentials=credentials)
+
+    model = GenerativeModel('gemini-1.5-flash')
         
     conversation_history.append(prompt)  # 今回のプロンプトを履歴に追加
 
@@ -39,7 +44,3 @@ def chat(request):
     else:
         conversation_history = []
     return render(request, 'chatapp/chat.html', {'messages': res})
-
-
-
-model = genai.GenerativeModel('gemini-1.5-flash')
