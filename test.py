@@ -2,12 +2,16 @@ import requests
 import math
 import dotenv
 import os
+import json
+
 
 dotenv.load_dotenv()
+prefecture_code_list = json.load(open('prefecture_code_list.json', 'r', encoding='utf-8'))
 
-API_KEY = os.getenv('API_KEY')
 
-def lat_lon_to_tile_coords(lat, lon, zoom):
+MAP_API_KEY = os.getenv('MAP_API_KEY')
+
+def lat_lon_to_tile_coords(zoom, lat, lon):
     # 緯度をラジアンに変換
     lat_rad = math.radians(lat)
     
@@ -42,13 +46,16 @@ def get_lat_lon(address, api_key):
         return None
 
 if __name__ == "__main__":
-    api_key = API_KEY
-    address = ''
-    coordinates = get_lat_lon(address, api_key)
+    api_key = MAP_API_KEY
+    prefecture = '東京都'
+    address = '江東区豊洲'
+    prefecture_code = prefecture_code_list[prefecture]
+    coordinates = get_lat_lon(prefecture + address, api_key)
     if coordinates:
         lat = coordinates[0]
         lon = coordinates[1]
         print(f"緯度: {lat}, 経度: {lon}")
 
-        z, x, y = lat_lon_to_tile_coords(lat, lon, 15)
+        z, x, y = lat_lon_to_tile_coords(17, lat, lon)
         print(f"https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png")
+        print(f"https://disaportaldata.gsi.go.jp/raster/01_flood_l2_shinsuishin_data/{z}/{x}/{y}.png")

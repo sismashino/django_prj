@@ -7,15 +7,9 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-.envファイルを作成し、`GOOGLE_APPLICATION_CREDENTIALS`にGemini APIのAPIキーを設定する。
+.envファイルを作成し、`MAP_API_KEY`にMAP APIのAPIキーを設定する。
 
 起動コマンド
 ```
 python manage.py runserver
 ```
-
-参考
-
-https://ai.google.dev/api?hl=ja&lang=python
-
-https://aistudio.google.com/

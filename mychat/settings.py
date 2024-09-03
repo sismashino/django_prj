@@ -129,11 +129,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# Gemini APIの認証情報
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-
-
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'chatapp', 'static'),
 ]
