@@ -26,11 +26,11 @@ def lat_lon_to_tile_coords(zoom, lat, lon):
     
     return zoom, x_tile, y_tile
 
-def get_lat_lon(address, api_key):
+def get_lat_lon(address):
     url = f"https://maps.googleapis.com/maps/api/geocode/json"
     params = {
         'address': address,
-        'key': api_key
+        'key': MAP_API_KEY
     }
     response = requests.get(url, params=params)
     if response.status_code == 200:
@@ -44,18 +44,3 @@ def get_lat_lon(address, api_key):
     else:
         print(f"エラーが発生しました: {response.status_code}")
         return None
-
-if __name__ == "__main__":
-    api_key = MAP_API_KEY
-    prefecture = '東京都'
-    address = '江東区豊洲'
-    prefecture_code = prefecture_code_list[prefecture]
-    coordinates = get_lat_lon(prefecture + address, api_key)
-    if coordinates:
-        lat = coordinates[0]
-        lon = coordinates[1]
-        print(f"緯度: {lat}, 経度: {lon}")
-
-        z, x, y = lat_lon_to_tile_coords(17, lat, lon)
-        print(f"https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png")
-        print(f"https://disaportaldata.gsi.go.jp/raster/01_flood_l2_shinsuishin_data/{z}/{x}/{y}.png")

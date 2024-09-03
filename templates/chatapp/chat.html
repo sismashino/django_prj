@@ -4,17 +4,23 @@
     <title>Chat App</title>
 </head>
 <body>
-    <div id="chat-messages">
-        {% if messages %}
-            {% for message in messages %}
-            <div>{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    </div>
     <form method="post">
         {% csrf_token %}
         <textarea name="message"></textarea>
         <button type="submit">Send</button>
     </form>
+    <div id="chat-messages">
+        {% if maps %}
+            {% for map in maps %}
+                <img src={{ map }} alt="Description of image">
+            {% endfor %}
+        {% endif %}
+        <br>
+        {% if floods %}
+            {% for flood in floods %}
+                <img src={{ flood }} alt="Description of image">
+            {% endfor %}
+        {% endif %}
+    </div>
 </body>
 </html>
