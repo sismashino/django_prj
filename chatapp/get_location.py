@@ -44,3 +44,21 @@ def get_lat_lon(address):
     else:
         print(f"エラーが発生しました: {response.status_code}")
         return None
+
+def tile_to_latlon(zoom, tileX, tileY):
+    # タイルの中心を取得するために x, y に 0.5 を足す
+    tileX += 0.5
+    tileY += 0.5
+    
+    # 経度の計算
+    lon = tileX / (2**zoom) * 360.0 - 180.0
+    
+    # 緯度の計算
+    n = math.pi - 2.0 * math.pi * tileY / (2**zoom)
+    lat = math.degrees(math.atan(math.sinh(n)))
+    
+    return lat, lon
+
+
+def get_key():
+    return MAP_API_KEY

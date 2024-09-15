@@ -1,4 +1,11 @@
-# chatapp/views.py
+import requests
+import tempfile
+
+import os
+from django.conf import settings
+from shutil import copyfile
+from shutil import move
+
 from django.shortcuts import render
 import google.generativeai as genai
 
@@ -41,6 +48,7 @@ def chat(request):
     global conversation_history
     res = ''
     maps = []
+    gmaps = []
     floods = []
     if request.method == 'POST':
         text = request.POST.get('message')
@@ -52,12 +60,24 @@ def chat(request):
             
             for i in [13, 15, 17]:
                 z, x, y = get_location.lat_lon_to_tile_coords(i, lat, lon)
-                maps.append(f"https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png")
+                clat, clon = get_location.tile_to_latlon(i, x, y)
+                res = requests.get(f"https://maps.googleapis.com/maps/api/staticmap?center={clat},{clon}&zoom={i}&size=256x256&key={get_location.get_key()}")
+                temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+                temp_file.write(res.content)
+                temp_file.flush()
+                # ファイルをMEDIA_ROOTにコピーして保存
+                media_file_path = os.path.join('tmp', os.path.basename(temp_file.name))
+                move(temp_file.name, media_file_path)
+                '''
+                gmaps.append('/tmp/' + os.path.basename(temp_file.name))
                 floods.append(f"https://disaportaldata.gsi.go.jp/raster/01_flood_l2_shinsuishin_data/{z}/{x}/{y}.png")
+                '''
+                gmaps = '/tmp/' + os.path.basename(temp_file.name)
+                floods = f"https://disaportaldata.gsi.go.jp/raster/01_flood_l2_shinsuishin_data/{z}/{x}/{y}.png"
         #res = generate_response(text)
     else:
         conversation_history = []
     return render(request, 'chatapp/chat.html', {
-        'maps': maps,
+        'gmaps': gmaps,
         'floods': floods
         }) 
